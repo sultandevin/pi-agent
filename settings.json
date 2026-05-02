@@ -1,0 +1,31 @@
+{
+  "defaultModel": "glm-5.1:cloud",
+  "defaultProvider": "ollama",
+  "lastChangelogVersion": "0.72.0",
+  "packages": [
+    "npm:@ollama/pi-web-search",
+    "npm:pi-subagents",
+    "npm:pi-caveman"
+  ],
+  "subagents": {
+    "agentOverrides": {
+      "scout": {
+        "model": "ollama/deepseek-v4-flash:cloud"
+      },
+      "delegate": {
+        "model": "ollama/minimax-m2.7:cloud"
+      },
+      "context-builder": {
+        "model": "ollama/deepseek-v4-flash:cloud"
+      }
+    }
+  },
+  "enabledModels": [
+    "ollama/glm-5.1:cloud",
+    "ollama/deepseek-v4-pro:cloud",
+    "ollama/deepseek-v4-flash:cloud"
+  ],
+  "editorPaddingX": 1,
+  "quietStartup": true,
+  "hideThinkingBlock": true
+}
