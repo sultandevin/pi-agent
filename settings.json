@@ -5,7 +5,8 @@
   "packages": [
     "npm:@ollama/pi-web-search",
     "npm:pi-subagents",
-    "npm:pi-caveman"
+    "npm:pi-caveman",
+    "npm:pi-fff"
   ],
   "subagents": {
     "agentOverrides": {
