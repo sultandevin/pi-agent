@@ -6,7 +6,9 @@
     "npm:@ollama/pi-web-search",
     "npm:pi-subagents",
     "npm:pi-caveman",
-    "npm:pi-fff"
+    "npm:pi-fff",
+    "npm:@plannotator/pi-extension",
+    "npm:pi-intercom"
   ],
   "subagents": {
     "agentOverrides": {
