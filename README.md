@@ -7,6 +7,7 @@ My minimal Pi Agent setup to use with the Ollama Cloud plan.
 For the time being the setup is relatively simple:
 - Caveman for token efficiency
 - Subagents for delegating tasks
+- Hashline for robust, hash-verified file edits
 
 ## Getting Started
 

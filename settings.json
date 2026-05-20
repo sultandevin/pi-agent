@@ -1,14 +1,12 @@
 {
   "defaultModel": "glm-5.1:cloud",
   "defaultProvider": "ollama",
-  "lastChangelogVersion": "0.72.0",
+  "lastChangelogVersion": "0.75.3",
   "packages": [
     "npm:@ollama/pi-web-search",
     "npm:pi-subagents",
-    "npm:pi-caveman",
-    "npm:pi-fff",
-    "npm:@plannotator/pi-extension",
-    "npm:pi-intercom"
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:pi-hashline-readmap"
   ],
   "subagents": {
     "agentOverrides": {
@@ -26,9 +24,10 @@
   "enabledModels": [
     "ollama/glm-5.1:cloud",
     "ollama/deepseek-v4-pro:cloud",
-    "ollama/deepseek-v4-flash:cloud"
+    "ollama/kimi-k2.6:cloud"
   ],
   "editorPaddingX": 1,
   "quietStartup": true,
-  "hideThinkingBlock": true
+  "hideThinkingBlock": false,
+  "defaultThinkingLevel": "high"
 }
