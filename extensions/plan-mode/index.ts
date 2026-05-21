@@ -253,19 +253,19 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 		if (event.toolName === "edit" || event.toolName === "write") {
 			return {
 				block: true,
-				reason: "Plan mode active: file modifications (edit/write) are disabled. Run /plan to disable plan mode first.",
+				reason: "Plan mode is active — you cannot modify files. Only the user can exit plan mode (Alt+p or /plan). Create a plan using the plan_create tool, or use read-only tools (read, grep, find, ls) to explore.",
 			};
 		}
 
-		if (event.toolName === "bash") {
-			const command = event.input.command as string;
-			if (!isSafeCommand(command)) {
-				return {
-					block: true,
-					reason: `Plan mode: bash command blocked (not on read-only allowlist).\nCommand: ${command}`,
-				};
-			}
-		}
+		// if (event.toolName === "bash") {
+		// 	const command = event.input.command as string;
+		// 	if (!isSafeCommand(command)) {
+		// 		return {
+		// 			block: true,
+		// 			reason: `Plan mode: bash command blocked (not on read-only allowlist).\nCommand: ${command}`,
+		// 		};
+		// 	}
+		// }
 	});
 
 	// Inject plan context before agent starts
@@ -295,7 +295,7 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 		}
 
 		if (planModeEnabled) {
-			content += `\n[PLAN MODE ACTIVE] You are in read-only mode. Use read, bash, grep, find, ls only. No edits.\n`;
+			content += `\n[PLAN MODE ACTIVE] Only the user can exit plan mode — you cannot edit or write files. Instead, use plan_create to lay out your approach, or explore with read, grep, find, ls. Edit/write attempts will be blocked.\n`;
 		}
 
 		return {
