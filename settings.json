@@ -12,17 +12,19 @@
     "npm:@plannotator/pi-extension",
     "npm:pi-intercom",
     "npm:context-mode",
-    "npm:@juicesharp/rpiv-ask-user-question"
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:pi-mermaid"
   ],
+  "quietStartup": true,
   "subagents": {
     "agentOverrides": {
-      "scout": {
+      "context-builder": {
         "model": "ollama/deepseek-v4-flash:cloud"
       },
       "delegate": {
-        "model": "ollama/minimax-m2.7:cloud"
+        "model": "ollama/deepseek-v4-pro:cloud"
       },
-      "context-builder": {
+      "scout": {
         "model": "ollama/deepseek-v4-flash:cloud"
       }
     }

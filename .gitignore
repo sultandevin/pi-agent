@@ -1,3 +1,8 @@
 sessions
 bin
 run-history.jsonl
+pi-fff
+intercom
+
+# Every setup has a different models.json file
+models.json
