@@ -6,3 +6,4 @@ intercom
 
 # Every setup has a different models.json file
 models.json
+node_modules/
