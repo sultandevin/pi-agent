@@ -49,7 +49,7 @@ export default function (pi: ExtensionAPI) {
     pi.on("agent_start", async (_event, ctx) => {
         resetState();
         const theme = ctx.ui.theme;
-        ctx.ui.setStatus("tps", theme.fg("dim", "⏱ generating..."));
+        ctx.ui.setWidget("tps", [theme.fg("dim", "⏱ generating...")]);
     });
 
     pi.on("message_start", async (event) => {
@@ -84,9 +84,9 @@ export default function (pi: ExtensionAPI) {
                 ? `${officialTokens} tok`
                 : `~${Math.round(estimatedStreamedTokens)} tok`;
             const theme = ctx.ui.theme;
-            ctx.ui.setStatus(
+            ctx.ui.setWidget(
                 "tps",
-                `${theme.fg("accent", `${formatTps(tps)} tok/s`)} ${theme.fg("dim", `(${tokenLabel} / ${elapsed.toFixed(1)}s)`)}`,
+                [`${theme.fg("accent", `${formatTps(tps)} tok/s`)} ${theme.fg("dim", `(${tokenLabel} / ${elapsed.toFixed(1)}s)`)}`],
             );
         }
     });
@@ -123,7 +123,7 @@ export default function (pi: ExtensionAPI) {
         const detail = theme.fg("dim", `${totalOutputTokens} tokens in ${elapsed.toFixed(1)}s streaming`);
 
         ctx.ui.notify(`${icon} ${tpsLabel}  ${detail}`, "info");
-        ctx.ui.setStatus("tps", theme.fg("dim", `done — ${tpsLabel}`));
+        ctx.ui.setWidget("tps", [theme.fg("dim", `done — ${tpsLabel}`)]);
     });
 
     pi.on("session_shutdown", () => {
