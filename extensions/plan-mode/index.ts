@@ -39,6 +39,9 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 	let cwd: string = "";
 	let planPath: string | null = null;
 
+	const pendingPlanWrites = new Set<string>();
+	let planWasJustModified = false;
+
 	function refreshPlanPath(): void {
 		if (!cwd) return;
 		const found = findPlanFile(cwd);
@@ -72,6 +75,7 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 		}
 		updateUI(ctx);
 		persistState();
+		pi.events.emit("footer:refresh", undefined);
 	}
 
 	// ─── Flag ───
@@ -104,11 +108,13 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 
 				// Allow if target is the known PLAN.md
 				if (planPath && resolved === planPath) {
+					pendingPlanWrites.add(event.toolCallId);
 					return;
 				}
 
 				// Allow if creating PLAN.md for the first time (any PLAN.md in cwd root)
 				if (resolved === path.resolve(cwd, DEFAULT_PLAN_FILE)) {
+					pendingPlanWrites.add(event.toolCallId);
 					return;
 				}
 			}
@@ -120,8 +126,18 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 		}
 	});
 
+	pi.on("tool_execution_end", async (event) => {
+		if (pendingPlanWrites.has(event.toolCallId)) {
+			pendingPlanWrites.delete(event.toolCallId);
+			if (!event.isError) {
+				planWasJustModified = true;
+			}
+		}
+	});
+
 	// ─── Inject plan context before agent starts ───
 	pi.on("before_agent_start", async () => {
+		planWasJustModified = false;
 		refreshPlanPath();
 
 		if (!planPath) return;
@@ -141,6 +157,37 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 				display: false,
 			},
 		};
+	});
+
+	// ─── Prompt user after agent finishes a plan-modifying turn ───
+	// NOTE: agent_end fires while isStreaming is still true (finishRun() runs AFTER
+	// all agent_end handlers return). So pi.sendUserMessage() must be delayed via
+	// setTimeout to ensure it runs after finishRun() sets isStreaming = false.
+	// Without this, deliverAs:"steer"/"followUp" queues an orphaned message that
+	// the exiting agent loop never processes, and no deliverAs throws an error.
+	// ────────────────────────────────────────────────────────────────────
+	pi.on("agent_end", async (_event, ctx) => {
+		if (!planModeEnabled || !planWasJustModified || !ctx.hasUI) return;
+		planWasJustModified = false;
+
+		const choice = await ctx.ui.select("Plan is ready. What would you like to do?", [
+			"Exit plan mode and start implementing",
+			"Modify plan",
+		]);
+
+		if (choice === "Exit plan mode and start implementing") {
+			togglePlanMode(ctx);
+			setTimeout(() => {
+				pi.sendUserMessage("Begin implementing the plan in PLAN.md.");
+			}, 0);
+		} else if (choice === "Modify plan") {
+			const mod = await ctx.ui.input("How would you like to modify the plan?");
+			if (mod?.trim()) {
+				setTimeout(() => {
+					pi.sendUserMessage(mod.trim());
+				}, 0);
+			}
+		}
 	});
 
 	// ─── Restore state on session start / resume / fork ───
@@ -167,11 +214,26 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 			planModeEnabled = planStateEntry.data.planModeEnabled ?? planModeEnabled;
 		}
 
+		// Prompt user to clear or keep existing PLAN.md on fresh session startup
+		if (planPath && ctx.hasUI) {
+			const choice = await ctx.ui.select("PLAN.md found from previous work. What would you like to do?", [
+				"Clear PLAN.md",
+				"Keep PLAN.md",
+			]);
+			if (choice === "Clear PLAN.md") {
+				fs.unlinkSync(planPath);
+				planPath = null;
+				ctx.ui.notify("PLAN.md removed.", "info");
+			}
+		}
+
 		if (planModeEnabled) {
 			pi.setActiveTools(PLAN_MODE_TOOLS);
+			planWasJustModified = false;
 		}
 
 		updateUI(ctx);
+		pi.events.emit("footer:refresh", undefined);
 	});
 
 	// ─── Handle tree navigation ───
@@ -199,5 +261,6 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 		}
 
 		updateUI(ctx);
+		pi.events.emit("footer:refresh", undefined);
 	});
 }
