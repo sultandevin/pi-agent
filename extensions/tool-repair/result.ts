@@ -7,6 +7,7 @@
  * produces the improved result content.
  */
 
+import type { TextContent, ImageContent } from "@earendil-works/pi-ai";
 import { DEGENERATE_AUTO_LINK, READ_DEFAULT_LIMIT, READ_DEFAULT_OFFSET } from "./config.js";
 
 // ---------------------------------------------------------------------------
@@ -45,18 +46,16 @@ export function improveResult(
 	event: {
 		toolCallId: string;
 		toolName: string;
-		input: unknown;
-		content: Array<{ type: string; text?: string }>;
+		input: Record<string, unknown>;
+		content: (TextContent | ImageContent)[];
 	},
-): { content: Array<{ type: "text"; text: string }> } | undefined {
+): { content?: (TextContent | ImageContent)[]; details?: unknown; isError?: boolean } | undefined {
 	const relationalRepairs = relationalRepairCalls.get(event.toolCallId);
 	if (!relationalRepairs || relationalRepairs.length === 0) return undefined;
 
 	relationalRepairCalls.delete(event.toolCallId);
 
 	if (event.toolName === "read") {
-		const input = event.input as Record<string, unknown>;
-		void input; // used below in note text
 		const notes: string[] = [];
 
 		for (const repair of relationalRepairs) {
@@ -73,12 +72,10 @@ export function improveResult(
 		}
 
 		if (notes.length > 0) {
-		return {
-			content: [
-				...event.content as Array<{ type: "text"; text: string }>,
-				{ type: "text" as const, text: notes.join("\n") },
-			],
-		};
+			const note: TextContent = { type: "text", text: notes.join("\n") };
+			return {
+				content: [...event.content, note],
+			};
 		}
 	}
 
