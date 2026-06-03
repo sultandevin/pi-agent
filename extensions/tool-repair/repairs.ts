@@ -22,8 +22,8 @@ import {
 	PATH_FIELDS,
 	READ_DEFAULT_LIMIT,
 	READ_DEFAULT_OFFSET,
-} from "./config";
-import { stripAutoLinksFromValue } from "./result";
+} from "./config.js";
+import { stripAutoLinksFromValue } from "./result.js";
 
 // ---------------------------------------------------------------------------
 // Repair 1: Strip null from optional fields

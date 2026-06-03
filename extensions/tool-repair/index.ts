@@ -24,9 +24,9 @@
  * normalizing everything.
  */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { stripNullFields, parseStringifiedArrays, stripMarkdownAutoLinks, unwrapSingleObjectAsArray, wrapBareStringAsArray, repairNestedArrayItems, applyRelationalDefaults } from "./repairs";
-import { logRepair, repairCounts, repairLog } from "./telemetry";
-import { trackRelationalRepair, improveResult } from "./result";
+import { stripNullFields, parseStringifiedArrays, stripMarkdownAutoLinks, unwrapSingleObjectAsArray, wrapBareStringAsArray, repairNestedArrayItems, applyRelationalDefaults } from "./repairs.js";
+import { logRepair, repairCounts, repairLog, type RepairEntry } from "./telemetry.js";
+import { trackRelationalRepair, improveResult } from "./result.js";
 
 export default function toolRepairExtension(pi: ExtensionAPI): void {
 	let currentModel: string | undefined;
@@ -142,7 +142,7 @@ export default function toolRepairExtension(pi: ExtensionAPI): void {
 
 			const recent = repairLog.slice(-20);
 			const lines = recent.map(
-				(entry) =>
+				(entry: RepairEntry) =>
 					`  [${new Date(entry.ts).toISOString().slice(11, 19)}] ` +
 					`${entry.model}/${entry.tool}: ${entry.repairs.join(", ")}`,
 			);

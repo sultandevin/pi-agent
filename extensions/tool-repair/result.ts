@@ -7,7 +7,7 @@
  * produces the improved result content.
  */
 
-import { DEGENERATE_AUTO_LINK, READ_DEFAULT_LIMIT, READ_DEFAULT_OFFSET } from "./config";
+import { DEGENERATE_AUTO_LINK, READ_DEFAULT_LIMIT, READ_DEFAULT_OFFSET } from "./config.js";
 
 // ---------------------------------------------------------------------------
 // State: which tool calls had relational repairs
@@ -73,12 +73,12 @@ export function improveResult(
 		}
 
 		if (notes.length > 0) {
-			return {
-				content: [
-					...event.content,
-					{ type: "text" as const, text: notes.join("\n") },
-				],
-			};
+		return {
+			content: [
+				...event.content as Array<{ type: "text"; text: string }>,
+				{ type: "text" as const, text: notes.join("\n") },
+			],
+		};
 		}
 	}
 
