@@ -1,15 +1,16 @@
 {
-  "theme": "catppuccin-mocha",
+  "theme": "dark",
   "defaultModel": "glm-5.1:cloud",
   "defaultProvider": "ollama",
-  "lastChangelogVersion": "0.75.3",
+  "lastChangelogVersion": "0.78.0",
   "packages": [
     "npm:@ollama/pi-web-search",
     "npm:pi-subagents",
     "npm:@juicesharp/rpiv-ask-user-question",
-    "npm:pi-hashline-readmap",
     "npm:pi-intercom",
-    "npm:pi-mermaid"
+    "npm:pi-mermaid",
+    "npm:pi-fff",
+    "npm:pi-rewind"
   ],
   "quietStartup": true,
   "subagents": {
@@ -31,7 +32,12 @@
     "ollama/kimi-k2.6:cloud"
   ],
   "editorPaddingX": 1,
-  "quietStartup": true,
-  "hideThinkingBlock": false,
-  "defaultThinkingLevel": "high"
+  "hideThinkingBlock": true,
+  "defaultThinkingLevel": "high",
+  "httpIdleTimeoutMs": 60000,
+  "treeFilterMode": "user-only",
+  "transport": "auto",
+  "terminal": {
+    "showTerminalProgress": true
+  }
 }
