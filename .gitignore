@@ -7,3 +7,8 @@ intercom
 # Every setup has a different models.json file
 models.json
 node_modules/
+
+# Credentials and generated runtime state
+auth.json
+models-store.json
+pi-subagents/

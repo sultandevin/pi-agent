@@ -1,6 +1,6 @@
 # Pi Agent Setup
 
-My minimal Pi Agent setup to use with the Ollama Cloud plan.
+My minimal Pi Agent setup using OpenAI Codex.
 
 ## Plugins
 
