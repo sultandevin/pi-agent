@@ -1,7 +1,8 @@
 sessions
 bin
 run-history.jsonl
-pi-fff
+trust.json
+fff
 intercom
 
 # Every setup has a different models.json file

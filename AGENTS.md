@@ -1,1 +1,1 @@
-../../dotfiles/codex/.pi/agent/AGENTS.md
+/home/molly/dotfiles/.agents/AGENTS.md
